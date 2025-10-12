@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+// Hashes the password before storing into database
 userSchema.pre("save", async function(next) {
     const user = this;
 
@@ -35,6 +36,7 @@ userSchema.pre("save", async function(next) {
     next();
 });
 
+// Compares plaintext password to hashed password, to look for a match
 userSchema.methods.comparePassword = async function (triedPass) {
     return await bcrypt.compare(triedPass, this.password);
 };

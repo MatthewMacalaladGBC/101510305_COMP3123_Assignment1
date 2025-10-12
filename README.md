@@ -3,3 +3,7 @@
 
 **How to run the project:**
 - TEMPORARY TEXT
+
+
+**Notes:**
+- Installed jsonwebtoken, but will only implement if time allows.

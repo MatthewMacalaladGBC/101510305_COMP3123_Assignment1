@@ -13,7 +13,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/emp', employeeRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Default route testing" });
+  res.send({ message: "Default route testing" });
 });
 
 const PORT = process.env.PORT || 8081;
