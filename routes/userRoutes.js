@@ -1,5 +1,5 @@
 const express = require("express");
-const { query, validationResult } = require("express-validator"); 
+const { body, validationResult } = require("express-validator"); 
 const userController = require("../controllers/userController")
 const routerUser = express.Router();
 
@@ -19,9 +19,13 @@ const validate = async (req, res, next) => {
 routerUser.post("/signup",
     [
         // Validation checks for each field in signup request
-        query("username").notEmpty(),
-        query("email").notEmpty().isEmail(),
-        query("password").isLength({ min: 8 })
+        body("username")
+            .notEmpty().withMessage("Username cannot be empty."),
+        body("email")
+            .notEmpty().withMessage("Email cannot be empty.")
+            .isEmail().withMessage("Email must be in valid email format."),
+        body("password")
+            .isLength({ min: 8 }).withMessage("Password must have minimum length of 8.")
     ],
     validate, // Calls validate, defined above
     userController.signup // Signup handled in controller
@@ -30,9 +34,9 @@ routerUser.post("/signup",
 routerUser.post("/login",
     [
         // Validation checks for each field in signup request
-        query("username").optional().notEmpty(),
-        query("email").optional().isEmail(),
-        query("password").isLength({ min: 8 })
+        body("username").optional().notEmpty(),
+        body("email").optional().isEmail(),
+        body("password").isLength({ min: 8 })
     ],
     (req, res, next) => {
         const { email, username } = req.body;

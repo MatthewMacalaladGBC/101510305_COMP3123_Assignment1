@@ -1,5 +1,5 @@
 const express = require("express");
-const { query, validationResult } = require("express-validator"); 
+const { body, validationResult } = require("express-validator"); 
 const employeeController = require("../controllers/employeeController")
 const routerEmployee = express.Router();
 
@@ -21,13 +21,23 @@ routerEmployee.get("/employees", employeeController.getAllEmployees)
 routerEmployee.post("/employees",
     [
         // Validation checks for each field in create employee request
-        query("first_name").notEmpty(),
-        query("last_name").notEmpty(),
-        query("last_name").notEmpty().isEmail(),
-        query("position").notEmpty(),
-        query("salary").notEmpty().isNumeric(),
-        query("date_of_joining").notEmpty().isDate(),
-        query("department").notEmpty()
+        body("first_name")
+            .notEmpty().withMessage("First name cannot be empty."),
+        body("last_name")
+            .notEmpty().withMessage("Last name cannot be empty."),
+        body("email")
+            .notEmpty().withMessage("Email cannot be empty.")
+            .isEmail().withMessage("Email must be in valid email format."),
+        body("position")
+            .notEmpty().withMessage("Position cannot be empty."),
+        body("salary")
+            .notEmpty().withMessage("Salary cannot be empty.")
+            .isFloat({min: 0}).withMessage("Salary must be a valid, positive number."),
+        body("date_of_joining")
+            .notEmpty().withMessage("Date of joining cannot be empty.")
+            .isDate().withMessage("Date must be in valid date format."),
+        body("department")
+            .notEmpty().withMessage("First name cannot be empty.")
     ],
     validate, // Calls validate, defined above
     employeeController.createNewEmployee // Creation handled in controller
