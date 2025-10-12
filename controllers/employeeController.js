@@ -15,7 +15,7 @@ const formatEmployee = (employee) => ({
 // GET - /api/v1/emp/employees
 const getAllEmployees = async (req, res) => {
     try {
-        const employees = await Employee.find().select("-created_at -updated_at");
+        const employees = await Employee.find().select("-__v -created_at -updated_at");
         const formattedEmployees = employees.map(formatEmployee);
         res.status(200).json(formattedEmployees);
     } catch (error) {

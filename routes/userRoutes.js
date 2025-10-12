@@ -41,7 +41,7 @@ routerUser.post("/login",
     (req, res, next) => {
         const { email, username } = req.body;
         if ( !email && !username ) {
-            return res.status(400).send("Request body must contain either a username or email, and a password).")
+            return res.status(400).send("Request body must contain either a username or email, and a password.")
         }
         next();
     },

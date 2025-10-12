@@ -12,7 +12,7 @@ const signup = async (req, res) => {
 
         // Checks if the provided username or email already exist
         const userExists = await User.findOne({
-            $0r: [
+            $or: [
                 { username: username },
                 { email: email }
             ]
@@ -53,7 +53,7 @@ const login = async (req, res) => {
         //     return res.status(400).send("Request body must contain either a username or email, and a password).")
         // }
 
-        const user = awaitUser.findOne(email ? {email: email} : {username: username})
+        const user = await User.findOne(email ? {email: email} : {username: username})
 
         // If a user is not found, returns a message and terminates request
         if (!user) {
