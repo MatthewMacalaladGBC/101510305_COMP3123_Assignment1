@@ -27,7 +27,7 @@ routerUser.post("/signup",
     userController.signup // Signup handled in controller
 );
 
-routerUser.login("/login",
+routerUser.post("/login",
     [
         // Validation checks for each field in signup request
         query("username").optional().notEmpty(),
