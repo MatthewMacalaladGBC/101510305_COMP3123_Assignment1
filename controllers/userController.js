@@ -5,10 +5,10 @@ const signup = async (req, res) => {
     try{
         const { username, email, password } = req.body;
 
-        // Ends the request if any field is missing
-        if ( !username || !email || !password ) {
-            return res.status(400).send("Request body must contain all fields (username, email, password)")
-        }
+        // Ends the request if any field is missing (removed because added check in userRoutes)
+        // if ( !username || !email || !password ) {
+        //     return res.status(400).send("Request body must contain all fields (username, email, password)")
+        // }
 
         // Checks if the provided username or email already exist
         const userExists = await User.findOne({
@@ -21,7 +21,10 @@ const signup = async (req, res) => {
         if (userExists) {
             // Sets dupeVal to whichever of Username or Email is a duplicate (default to Username if both)
             const dupeVal = userExists.username === username ? "Username" : "Email"
-            return res.status(400).json({ message: `${dupeVal} is already in use. Please try another.`})
+            return res.status(400).json({ 
+                status: false,
+                message: `${dupeVal} is already in use. Please try again.`
+            })
         }
 
         // Creates new user using provided values, then saves to database
@@ -32,7 +35,11 @@ const signup = async (req, res) => {
             user_id: newUser._id
         });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: false,
+            message: "Error signing up.",
+            error: error.message
+        });
     }
 };
 
@@ -51,7 +58,7 @@ const login = async (req, res) => {
         // If a user is not found, returns a message and terminates request
         if (!user) {
             return res.status(401).json({
-                status: "false",
+                status: false,
                 message: `Invalid credentials: ${email ? "email" : "username"} not found.`
             });
         };
@@ -59,9 +66,9 @@ const login = async (req, res) => {
         // Uses the comparePassword method defined in the User model
         const correctPass = await user.comparePassword(password);
         if (!correctPass) {
-                return res.status(401).json({
-                status: "false",
-                message: `Invalid credentials: Password is incorrect.`
+            return res.status(401).json({
+                status: false,
+                message: "Invalid credentials: Password is incorrect."
             });
         };
 
@@ -69,7 +76,11 @@ const login = async (req, res) => {
             message: "Login successful."
         });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: false,
+            message: "Error logging in.",
+            error: error.message
+        });
     }
 };
 
