@@ -12,19 +12,19 @@ const validate = async (req, res, next) => {
             errors: result.array()
         })
     }
-    // If ther are no errors (valid request), goes to the next callback
+    // If there are no errors (valid request), goes to the next callback
     next();
-}
+};
 
 routerUser.post("/signup",
     [
         // Validation checks for each field in signup request
         query("username").notEmpty(),
-        query("email").isEmail(),
+        query("email").notEmpty().isEmail(),
         query("password").isLength({ min: 8 })
     ],
     validate, // Calls validate, defined above
-    userController.signup() // Signup handled in controller
+    userController.signup // Signup handled in controller
 );
 
 routerUser.login("/login",
@@ -42,7 +42,7 @@ routerUser.login("/login",
         next();
     },
     validate, // Calls validate, defined above
-    userController.login() // Login handled in controller
+    userController.login // Login handled in controller
 );
 
 module.exports = routerUser;
