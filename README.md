@@ -13,16 +13,22 @@
 ## **Endpoints to Test**
 **1. Endpoint:** /api/v1/user/signup | **Method:** POST
 - Body must include "username", "email", and "password"
+
 **2. Endpoint:** /api/v1/user/login | **Method:** POST
 - Body must include "password" and at least one of either "email" or "username"
+
 **3. Endpoint:** /api/v1/emp/employees | **Method:** GET
+
 **4. Endpoint:** /api/v1/emp/employees | **Method:** POST
 - Body must include "first_name", "last_name", "email", "position", "salary", "date_of_joining", and "department"
+
 **5. Endpoint:** /api/v1/emp/employees/{employee_id} | **Method:** GET
 - Replace {employee_id} in the Request URL with a valid employee ID
+
 **6. Endpoint:** /api/v1/emp/employees/{employee_id} | **Method:** PUT
 - Replace {employee_id} in the Request URL with a valid employee ID
 - Body can include any combination of "first_name", "last_name", "email", "position", "salary", "date_of_joining", and "department" 
+
 **7. Endpoint:** /api/v1/emp/employees?employee_id={xxx} | **Method:** DELETE
 - Replace {xxx} in the Request URL with a valid employee ID
 
