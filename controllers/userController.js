@@ -18,6 +18,7 @@ const signup = async (req, res) => {
             ]
         })
 
+        // If user already exists (username or email already in database) then return error status
         if (userExists) {
             // Sets dupeVal to whichever of Username or Email is a duplicate (default to Username if both)
             const dupeVal = userExists.username === username ? "Username" : "Email"
@@ -65,6 +66,7 @@ const login = async (req, res) => {
 
         // Uses the comparePassword method defined in the User model
         const correctPass = await user.comparePassword(password);
+        // If password does not match, return error status
         if (!correctPass) {
             return res.status(401).json({
                 status: false,

@@ -38,11 +38,14 @@ routerUser.post("/login",
         body("email").optional().isEmail(),
         body("password").isLength({ min: 8 })
     ],
+    // Check that login body has at least one of email or username
     (req, res, next) => {
         const { email, username } = req.body;
+        // If not, return error status
         if ( !email && !username ) {
             return res.status(400).send("Request body must contain either a username or email, and a password.")
         }
+        // If valid, move to validate
         next();
     },
     validate, // Calls validate, defined above

@@ -20,7 +20,8 @@ routerEmployee.get("/employees", employeeController.getAllEmployees)
 
 routerEmployee.post("/employees",
     [
-        // Validation checks for each field in create employee request
+        // Validation checks for each field in create employee request, 
+        // with messages in case of validation failure
         body("first_name")
             .notEmpty().withMessage("First name cannot be empty."),
         body("last_name")
@@ -35,7 +36,7 @@ routerEmployee.post("/employees",
             .isFloat({min: 0}).withMessage("Salary must be a valid, positive number."),
         body("date_of_joining")
             .notEmpty().withMessage("Date of joining cannot be empty.")
-            .isDate().withMessage("Date must be in valid date format."),
+            .isISO8601().toDate().withMessage("Date must be in valid date format."),
         body("department")
             .notEmpty().withMessage("First name cannot be empty.")
     ],
