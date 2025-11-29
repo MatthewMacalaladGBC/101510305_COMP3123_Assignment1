@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 // POST - /api/v1/user/signup
 const signup = async (req, res) => {
@@ -32,6 +33,7 @@ const signup = async (req, res) => {
         const newUser = new User({ username, email, password });
         await newUser.save();
         res.status(201).json({
+            status: true,
             message: "User created successfully.",
             user_id: newUser._id
         });
@@ -74,8 +76,17 @@ const login = async (req, res) => {
             });
         };
 
+        const token = jwt.sign(
+            { user_id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "3h"}
+        );
+
         res.status(200).json({
-            message: "Login successful."
+            status: true,
+            message: "Login successful.",
+            user_id: user._id,
+            token
         });
     } catch (error) {
         res.status(500).json({

@@ -43,7 +43,10 @@ routerUser.post("/login",
         const { email, username } = req.body;
         // If not, return error status
         if ( !email && !username ) {
-            return res.status(400).send("Request body must contain either a username or email, and a password.")
+            return res.status(400).json({
+                status: false,
+                message: "Request body must contain either a username or email, and a password."
+            })
         }
         // If valid, move to validate
         next();

@@ -29,6 +29,10 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    profile_image: {
+        type: String, // to store local file path / URL
+        default: null
+    },
     created_at: {
         type: Date,
         default: Date.now

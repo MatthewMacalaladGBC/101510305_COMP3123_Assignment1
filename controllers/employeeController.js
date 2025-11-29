@@ -38,7 +38,8 @@ const createNewEmployee = async (req, res) => {
         await newEmployee.save();
         // Return success message
         res.status(201).json({
-            message: "Employee created succesfully.",
+            status: true,
+            message: "Employee created successfully.",
             employee_id: newEmployee._id
         });
     } catch (error) {
@@ -77,7 +78,11 @@ const getEmployeeById = async (req, res) => {
 const updateEmployee = async (req, res) => {
     try {
         // Look for employee to update using path param and update using request body
-        const updatedEmp = await Employee.findByIdAndUpdate(req.params.eid, req.body);
+        const updatedEmp = await Employee.findByIdAndUpdate(
+            req.params.eid, 
+            req.body,
+            { new: true }
+        );
         // If not found, return error status
         if (!updatedEmp) {
             return res.status(404).json({
@@ -86,7 +91,11 @@ const updateEmployee = async (req, res) => {
             });
         };
         // Otherwise, return success message
-        res.status(200).json({ message: "Employee details successfully updated."});
+        res.status(200).json({ 
+            status: true,
+            message: "Employee details successfully updated.",
+            employee: formatEmployee(updatedEmp)
+        });
     } catch (error) {
         res.status(500).json({
             status: false,
@@ -122,4 +131,28 @@ const deleteEmployeeById = async (req, res) => {
     };
 };
 
-module.exports = { getAllEmployees, createNewEmployee, getEmployeeById, updateEmployee, deleteEmployeeById };
+const searchEmployees = async (req, res) => {
+    // Get query values from request
+    const { query } = req.query; 
+
+    try {
+        const employees = await Employee.find({
+            $or: [
+                { first_name: { $regex: query, $options: "i" } },
+                { last_name: { $regex: query, $options: "i" } },
+                { department: { $regex: query, $options: "i" } },
+                { position: { $regex: query, $options: "i" } }
+            ]
+        }).select("-__v -created_at -updated_at");
+
+        res.status(200).json(employees.map(formatEmployee));
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: "Error searching employee.",
+            error: error.message
+        });
+    }
+}
+
+module.exports = { getAllEmployees, createNewEmployee, getEmployeeById, updateEmployee, deleteEmployeeById, searchEmployees };
