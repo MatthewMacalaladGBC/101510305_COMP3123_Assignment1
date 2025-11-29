@@ -1,22 +1,26 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors")
 const app = express();
 const connectDB = require("./db");
 const userRouter = require("./routes/userRoutes");
 const employeeRouter = require("./routes/employeeRoutes");
 
-connectDB();
+connectDB().then(() => {
+  const PORT = process.env.PORT || 8081;
+  app.listen(PORT, () => {
+      console.log("Web server is running at port " + PORT);
+  });
+});
 
 app.use(express.json());
+app.use(cors());
 
-app.use('/api/v1/user', userRouter);
-app.use('/api/v1/emp', employeeRouter);
+app.use("/uploads", express.static("uploads"));
+
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/emp", employeeRouter);
 
 app.get("/", (req, res) => {
   res.send({ message: "Default route testing" });
-});
-
-const PORT = process.env.PORT || 8081;
-app.listen(PORT, () => {
-    console.log("Web server is running at port " + PORT);
 });
