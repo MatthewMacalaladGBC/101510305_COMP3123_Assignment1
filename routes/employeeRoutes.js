@@ -46,12 +46,12 @@ routerEmployee.post("/employees", authToken, upload.single("profile_image"),
     employeeController.createNewEmployee // Creation handled in controller
 );
 
+routerEmployee.get("/employees/search", authToken, employeeController.searchEmployees);
+
 routerEmployee.get("/employees/:eid", authToken, employeeController.getEmployeeById);
 
 routerEmployee.put("/employees/:eid", authToken, upload.single("profile_image"), employeeController.updateEmployee);
 
 routerEmployee.delete("/employees", authToken, employeeController.deleteEmployeeById);
-
-routerEmployee.get("/employees/search", authToken, employeeController.searchEmployees);
 
 module.exports = routerEmployee;

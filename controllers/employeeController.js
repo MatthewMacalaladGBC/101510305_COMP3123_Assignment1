@@ -146,6 +146,7 @@ const deleteEmployeeById = async (req, res) => {
     };
 };
 
+// GET - /api/v1/emp/employees/search?query=xxx
 const searchEmployees = async (req, res) => {
     // Get query values from request
     const { query } = req.query; 
@@ -153,8 +154,6 @@ const searchEmployees = async (req, res) => {
     try {
         const employees = await Employee.find({
             $or: [
-                { first_name: { $regex: query, $options: "i" } },
-                { last_name: { $regex: query, $options: "i" } },
                 { department: { $regex: query, $options: "i" } },
                 { position: { $regex: query, $options: "i" } }
             ]
