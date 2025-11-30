@@ -14,7 +14,15 @@ connectDB().then(() => {
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000", // Local
+    "https://one01510305-comp3123-assignment2.onrender.com" // Render Deploy
+  ],
+  credentials: true
+}
+
+));
 
 app.use("/uploads", express.static("uploads"));
 
