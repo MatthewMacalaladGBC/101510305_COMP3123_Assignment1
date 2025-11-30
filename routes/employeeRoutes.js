@@ -2,6 +2,7 @@ const express = require("express");
 const { body, validationResult } = require("express-validator"); 
 const employeeController = require("../controllers/employeeController")
 const { authToken } = require("../middlewares/authMiddleware")
+const upload = require("../middlewares/uploadMiddleware")
 const routerEmployee = express.Router();
 
 const validate = async (req, res, next) => {
@@ -19,7 +20,7 @@ const validate = async (req, res, next) => {
 
 routerEmployee.get("/employees", authToken, employeeController.getAllEmployees)
 
-routerEmployee.post("/employees", authToken, 
+routerEmployee.post("/employees", authToken, upload.single("profile_image"),
     [
         // Validation checks for each field in create employee request, 
         // with messages in case of validation failure
@@ -45,9 +46,9 @@ routerEmployee.post("/employees", authToken,
     employeeController.createNewEmployee // Creation handled in controller
 );
 
-routerEmployee.get("/employees/:eid", authToken,  employeeController.getEmployeeById);
+routerEmployee.get("/employees/:eid", authToken, employeeController.getEmployeeById);
 
-routerEmployee.put("/employees/:eid", authToken, employeeController.updateEmployee);
+routerEmployee.put("/employees/:eid", authToken, upload.single("profile_image"), employeeController.updateEmployee);
 
 routerEmployee.delete("/employees", authToken, employeeController.deleteEmployeeById);
 

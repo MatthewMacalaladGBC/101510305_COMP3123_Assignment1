@@ -34,18 +34,17 @@ routerUser.post("/signup",
 routerUser.post("/login",
     [
         // Validation checks for each field in signup request
-        body("username").optional().notEmpty(),
-        body("email").optional().isEmail(),
+        body("login").notEmpty().withMessage("Email or Username is required"),
         body("password").isLength({ min: 8 })
     ],
     // Check that login body has at least one of email or username
     (req, res, next) => {
-        const { email, username } = req.body;
+        const { login } = req.body;
         // If not, return error status
-        if ( !email && !username ) {
+        if ( !login ) {
             return res.status(400).json({
                 status: false,
-                message: "Request body must contain either a username or email, and a password."
+                message: "Must contain either a username or email."
             })
         }
         // If valid, move to validate

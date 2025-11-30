@@ -49,20 +49,22 @@ const signup = async (req, res) => {
 // POST - /api/v1/user/login
 const login = async (req, res) => {
     try{
-        const { email, username, password } = req.body;
+        const { login, password } = req.body;
 
         // Ends request if any field is missing (removed because added check in userRoutes)
         // if ( (!email && !username) || !password ) {
         //     return res.status(400).send("Request body must contain either a username or email, and a password).")
         // }
 
-        const user = await User.findOne(email ? {email: email} : {username: username})
+        const isEmail = login.includes("@");
+
+        const user = await User.findOne(isEmail ? {email: login} : {username: login})
 
         // If a user is not found, returns a message and terminates request
         if (!user) {
             return res.status(401).json({
                 status: false,
-                message: `Invalid credentials: ${email ? "email" : "username"} not found.`
+                message: `Invalid credentials: ${isEmail ? "email" : "username"} not found.`
             });
         };
 

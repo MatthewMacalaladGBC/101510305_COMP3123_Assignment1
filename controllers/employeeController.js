@@ -9,7 +9,10 @@ const formatEmployee = (employee) => ({
     position: employee.position,
     salary: employee.salary,
     date_of_joining: employee.date_of_joining,
-    department: employee.department
+    department: employee.department,
+    profile_image: employee.profile_image ? 
+    `${process.env.BASE_URL}${employee.profile_image}` 
+    : null
 });
 
 // GET - /api/v1/emp/employees
@@ -34,7 +37,13 @@ const getAllEmployees = async (req, res) => {
 const createNewEmployee = async (req, res) => {
     try {
         // Instantiate a new employee using request body
-        const newEmployee = new Employee(req.body);
+        const employeeData = req.body;
+
+        if (req.file) {
+            employeeData.profile_image = `/uploads/employee_profile_images/${req.file.filename}`;
+        }
+
+        const newEmployee = new Employee(employeeData);
         await newEmployee.save();
         // Return success message
         res.status(201).json({
@@ -78,9 +87,15 @@ const getEmployeeById = async (req, res) => {
 const updateEmployee = async (req, res) => {
     try {
         // Look for employee to update using path param and update using request body
+        const updates = req.body;
+
+        if (req.file) {
+            updates.profile_image = `/uploads/employee_profile_images/${req.file.filename}`;
+        }
+
         const updatedEmp = await Employee.findByIdAndUpdate(
             req.params.eid, 
-            req.body,
+            updates,
             { new: true }
         );
         // If not found, return error status
